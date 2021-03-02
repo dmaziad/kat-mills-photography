@@ -76,13 +76,16 @@ export const RightColumnStyle = styled.div`
 
 // TODO: Rotating background image
 export const ColumnStyles = styled.div`
+	:before {
+		animation: fade 1s ease-out;
+	}
 	float: left;
 	margin-left: -10px;
 	overflow: hidden;
 	width: 100vw;
 	max-width: 1500px;
 	max-height: 80vh;
-	background-image: url(${WeddingPhoto});
+	background-image: url(${props => props.image ? props.image : WeddingPhoto});
 	background-repeat: no-repeat;
 	background-size: 100%;
 	min-height: 800px;

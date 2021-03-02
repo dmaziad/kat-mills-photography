@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Nav from '../components/Nav';
 import Logo from '../images/km_transparent_logo.png';
@@ -12,61 +12,61 @@ import {
 	RightColumnStyle,
 	NextButton
 } from '../styles';
+import WeddingPhoto from '../images/wedding-outdoors.jpg';
+import Landscape1 from '../images/landscape-1.jpg';
+import Landscape2 from '../images/landscape-2.jpg';
+import Landscape3 from '../images/landscape-3.jpg';
+import Landscape4 from '../images/landscape-4.jpg';
+import Portrait1 from '../images/portrait-1.jpg';
+import Portrait2 from '../images/portrait-2.jpg';
+import Portrait3 from '../images/portrait-3.jpg';
 
-// markup
 const IndexPage = () => {
+	const landscapeImages = [Landscape1, Landscape2, Landscape3, Landscape4, WeddingPhoto];
+	const portraitImages = [Portrait1, Portrait2, Portrait3];
+	let [images, setImages] = useState(portraitImages);
+	let [i, setI] = useState(0);
+	let [image, setImage] = useState(images[0]);
+	
+	const setImageList = useCallback(() => {
+		if (window.innerWidth >= 915 && images[0] !== landscapeImages[0]) {
+			setImages(landscapeImages);
+			setI(0);
+			setImage(landscapeImages[0]);
+		};
+		if (window.innerWidth < 915 && images[0] !== portraitImages[0]) {
+			setImages(portraitImages);
+			setI(0);
+			setImage(portraitImages[0]);
+		}
+	}, [images, landscapeImages, portraitImages, setImage, setImages])
+	useEffect (() => {
+		setImageList();
+	}, [])
+	useEffect(() => {
+		window.addEventListener('resize', setImageList);
+		return () => window.removeEventListener('resize', setImageList);
+	}, [setImageList]);
+	useEffect(() => {
+		const rotator = setInterval(() => {
+			if (i >= images.length - 1) {
+				setI(0)
+			} else {
+				setI(i + 1)
+			}
+			setImage(images[i]);
+		}, 3000)
+		return () => clearInterval(rotator);
+	}, [i, images, landscapeImages, setI, setImage])
+
 	return (
 		<BodyStyle>
 			<Nav />
 			<PageStyles>
 				<title>Home Page</title>
-				<ColumnStyles>
+				<ColumnStyles image={image}>
 					<LeftColumnStyle>
 						<ColumnContentStyle>
-							{/* <h1 style={headingStyles}>
-								Congratulations
-								<br />
-								<span style={headingAccentStyles}>
-								— you just made a Gatsby site!{' '}
-								</span>
-								<span role='img' aria-label='Party popper emojis'>
-								🎉🎉🎉
-								</span>
-								</h1>
-								<p style={paragraphStyles}>
-								Edit <code style={codeStyles}>src/pages/index.js</code> to see
-								this page update in real-time.{' '}
-								<span role='img' aria-label='Sunglasses smiley emoji'>
-								😎
-								</span>
-								</p>
-								<ul style={listStyles}>
-								<li style={docLinkStyle}>
-								<a
-								style={linkStyle}
-								href={`${docLink.url}?utm_source=starter&utm_medium=start-page&utm_campaign=minimal-starter`}
-								>
-								{docLink.text}
-								</a>
-								</li>
-								{links.map((link) => (
-									<li style={{ ...listItemStyles, color: link.color }}>
-									<span>
-									<a
-									style={linkStyle}
-									href={`${link.url}?utm_source=starter&utm_medium=start-page&utm_campaign=minimal-starter`}
-									>
-									{link.text}
-									</a>
-									<p style={descriptionStyle}>{link.description}</p>
-									</span>
-									</li>
-									))}
-									</ul>
-									<img
-									alt='Gatsby G Logo'
-									src="data:image/svg+xml,%3Csvg width='24' height='24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2a10 10 0 110 20 10 10 0 010-20zm0 2c-3.73 0-6.86 2.55-7.75 6L14 19.75c3.45-.89 6-4.02 6-7.75h-5.25v1.5h3.45a6.37 6.37 0 01-3.89 4.44L6.06 9.69C7 7.31 9.3 5.63 12 5.63c2.13 0 4 1.04 5.18 2.65l1.23-1.06A7.959 7.959 0 0012 4zm-8 8a8 8 0 008 8c.04 0 .09 0-8-8z' fill='%23639'/%3E%3C/svg%3E"
-								/> */}
 							<ImageWrapperStyle>
 								<img alt="Kat Mills Photography logo" width='90%' src={Logo} />
 							</ImageWrapperStyle>
